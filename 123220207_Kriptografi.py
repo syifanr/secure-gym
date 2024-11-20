@@ -735,7 +735,7 @@ else:  # Logged in
         elif admin_action == "Dekripsi File Pembayaran":
             st.subheader("Dekripsi File Pembayaran")
             
-            uploaded_file = st.file_uploader("Upload file terenkripsi", type=["bin", "enc", "txt", "pdf"])
+            uploaded_file = st.file_uploader("Upload file terenkripsi", type=["bin", "enc", "txt", "pdf", "docx"])
             rc4_key = st.text_input("Masukkan Kunci RC4 (3-4 Karakter)")
             
             if st.button("Dekripsi File"):
