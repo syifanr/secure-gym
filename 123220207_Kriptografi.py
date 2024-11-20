@@ -11,39 +11,6 @@ import io
 import numpy as np 
 from arc4 import ARC4
 
-def hide_text_in_image(image, text):
-    # Tambahkan penanda akhir
-    data = text + "###END###"
-    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke biner
-
-    # Konversi gambar menjadi array numpy
-    img_array = np.array(image)
-    flat_img = img_array.flatten()
-
-    # Validasi kapasitas gambar
-    if len(bin_data) > len(flat_img):
-        raise OverflowError(
-            f"Teks terlalu panjang untuk disisipkan dalam gambar ini.\n"
-            f"Kapasitas gambar: {len(flat_img)} bit.\n"
-            f"Data yang diperlukan: {len(bin_data)} bit.\n"
-            f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
-        )
-
-    # Sisipkan data biner ke dalam gambar
-    for i in range(len(bin_data)):
-        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
-
-    # Rekonstruksi gambar dari array yang dimodifikasi
-    reshaped_img = flat_img.reshape(img_array.shape)
-    return Image.fromarray(reshaped_img.astype('uint8'))
-
-max_capacity = len(np.array(image).flatten()) // 8  # Kapasitas dalam karakter
-st.info(f"Gambar ini dapat menyimpan hingga {max_capacity} karakter teks.")
-
-image = image.convert("L")  # Ubah gambar ke format grayscale
-
-
-
 
 
 # Fungsi hashing untuk password
