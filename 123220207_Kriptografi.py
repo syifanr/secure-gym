@@ -503,14 +503,16 @@ def hide_text_in_image(image, text):
     img_array = np.array(image)
     flat_img = img_array.flatten()
 
+    # Validasi ukuran data terhadap kapasitas gambar
     if len(bin_data) > len(flat_img):
-        raise ValueError("Teks terlalu besar untuk disisipkan dalam gambar!")
+        raise OverflowError("Teks terlalu besar untuk disisipkan dalam gambar. Gunakan gambar dengan resolusi lebih tinggi.")
 
     for i in range(len(bin_data)):
         flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
 
     reshaped_img = flat_img.reshape(img_array.shape)
     return Image.fromarray(reshaped_img.astype('uint8'))
+
 
 # Fungsi untuk mengambil teks tersembunyi dari gambar
 def retrieve_text_from_image(image):
