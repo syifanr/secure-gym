@@ -12,21 +12,31 @@ import numpy as np
 from arc4 import ARC4
 
 def hide_text_in_image(image, text):
-    data = text + "###END###"  # Tambahkan penanda akhir data
-    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke biner
+    # Tambahkan penanda akhir data
+    data = text + "###END###"
+    bin_data = ''.join(format(ord(char), '08b') for char in data)
     
     # Konversi gambar ke array numpy
     img_array = np.array(image)
     flat_img = img_array.flatten()
 
-    # Validasi panjang data
+    # Validasi: Pastikan gambar memiliki cukup piksel untuk teks
     if len(bin_data) > len(flat_img):
         raise OverflowError(
-            f"Teks terlalu panjang untuk disisipkan ke dalam gambar ini.\n"
+            f"Teks terlalu panjang untuk disisipkan ke gambar ini.\n"
             f"Kapasitas gambar: {len(flat_img)} piksel.\n"
-            f"Data yang diperlukan: {len(bin_data)} bit.\n"
+            f"Panjang data yang diperlukan: {len(bin_data)} bit.\n"
             f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
         )
+
+    # Sisipkan data ke dalam gambar
+    for i in range(len(bin_data)):
+        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
+
+    # Rekonstruksi gambar
+    reshaped_img = flat_img.reshape(img_array.shape)
+    return Image.fromarray(reshaped_img.astype('uint8'))
+
 
 
     # Sisipkan data biner ke dalam gambar
