@@ -11,6 +11,37 @@ import io
 import numpy as np 
 from arc4 import ARC4
 
+def hide_text_in_image(image, text):
+    data = text + "###END###"  # Tambahkan penanda akhir data
+    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke biner
+    
+    # Konversi gambar ke array numpy
+    img_array = np.array(image)
+    flat_img = img_array.flatten()
+
+    # Validasi panjang data
+    if len(bin_data) > len(flat_img):
+        raise OverflowError(
+            f"Teks terlalu panjang untuk disisipkan ke dalam gambar ini.\n"
+            f"Kapasitas gambar: {len(flat_img)} piksel.\n"
+            f"Data yang diperlukan: {len(bin_data)} bit.\n"
+            f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
+        )
+try:
+    encoded_image = hide_text_in_image(image, secret_message)
+    st.success("Pesan berhasil disisipkan ke dalam gambar.")
+    st.image(encoded_image, caption="Gambar dengan pesan terenkripsi", use_column_width=True)
+except OverflowError as e:
+    st.error(f"Terjadi kesalahan: {e}")
+
+    # Sisipkan data biner ke dalam gambar
+    for i in range(len(bin_data)):
+        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
+
+    # Rekonstruksi gambar dari array yang dimodifikasi
+    reshaped_img = flat_img.reshape(img_array.shape)
+    return Image.fromarray(reshaped_img.astype('uint8'))
+
 # Fungsi hashing untuk password
 def hash_password(password):
     salt = "random_salt"
@@ -430,22 +461,6 @@ def display_bookings(bookings, is_completed=False):
                         elif confirm == "Tidak":
                             st.session_state[delete_key] = False
                             st.warning(f"Pesanan ID {booking_id} tidak jadi dihapus.")
-def hide_text_in_image(image, text):
-    data = text + "###END###"  # Tambahkan penanda akhir data
-    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke biner
-    
-    # Konversi gambar ke numpy array
-    img_array = np.array(image)
-    flat_img = img_array.flatten()
-
-    # Periksa apakah kapasitas gambar cukup untuk menyisipkan teks
-    if len(bin_data) > len(flat_img):
-        raise OverflowError(
-            f"Teks terlalu panjang untuk disisipkan dalam gambar ini. "
-            f"Ukuran gambar: {len(flat_img)} piksel, "
-            f"data yang diperlukan: {len(bin_data)} bit. "
-            f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
-        )
 
     # Sisipkan data biner ke gambar
     for i in range(len(bin_data)):
