@@ -27,12 +27,7 @@ def hide_text_in_image(image, text):
             f"Data yang diperlukan: {len(bin_data)} bit.\n"
             f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
         )
-try:
-    encoded_image = hide_text_in_image(image, secret_message)
-    st.success("Pesan berhasil disisipkan ke dalam gambar.")
-    st.image(encoded_image, caption="Gambar dengan pesan terenkripsi", use_column_width=True)
-except OverflowError as e:
-    st.error(f"Terjadi kesalahan: {e}")
+
 
     # Sisipkan data biner ke dalam gambar
     for i in range(len(bin_data)):
