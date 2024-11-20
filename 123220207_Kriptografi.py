@@ -12,9 +12,9 @@ import numpy as np
 from arc4 import ARC4
 
 def hide_text_in_image(image, text):
-    # Tambahkan penanda akhir data
-    data = text + "###END###"  # Penanda akhir data
-    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke format biner
+    # Tambahkan penanda akhir
+    data = text + "###END###"
+    bin_data = ''.join(format(ord(char), '08b') for char in data)  # Konversi teks ke biner
 
     # Konversi gambar menjadi array numpy
     img_array = np.array(image)
@@ -23,39 +23,11 @@ def hide_text_in_image(image, text):
     # Validasi kapasitas gambar
     if len(bin_data) > len(flat_img):
         raise OverflowError(
-            f"Teks terlalu panjang untuk disisipkan ke dalam gambar ini.\n"
+            f"Teks terlalu panjang untuk disisipkan dalam gambar ini.\n"
             f"Kapasitas gambar: {len(flat_img)} bit.\n"
-            f"Panjang data yang diperlukan: {len(bin_data)} bit.\n"
+            f"Data yang diperlukan: {len(bin_data)} bit.\n"
             f"Gunakan gambar dengan resolusi lebih tinggi atau kurangi panjang teks."
         )
-
-    # Sisipkan data ke dalam gambar
-    for i in range(len(bin_data)):
-        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
-
-    # Rekonstruksi gambar dari array yang telah dimodifikasi
-    reshaped_img = flat_img.reshape(img_array.shape)
-    return Image.fromarray(reshaped_img.astype('uint8'))
-
-
-
-    # Proses penyisipan data
-    for i in range(len(bin_data)):
-        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
-
-    # Rekonstruksi gambar
-    reshaped_img = flat_img.reshape(img_array.shape)
-    return Image.fromarray(reshaped_img.astype('uint8'))
-
-    # Sisipkan data ke dalam gambar
-    for i in range(len(bin_data)):
-        flat_img[i] = (flat_img[i] & ~1) | int(bin_data[i])
-
-    # Rekonstruksi gambar
-    reshaped_img = flat_img.reshape(img_array.shape)
-    return Image.fromarray(reshaped_img.astype('uint8'))
-
-
 
     # Sisipkan data biner ke dalam gambar
     for i in range(len(bin_data)):
@@ -64,6 +36,10 @@ def hide_text_in_image(image, text):
     # Rekonstruksi gambar dari array yang dimodifikasi
     reshaped_img = flat_img.reshape(img_array.shape)
     return Image.fromarray(reshaped_img.astype('uint8'))
+
+
+
+
 
 # Fungsi hashing untuk password
 def hash_password(password):
