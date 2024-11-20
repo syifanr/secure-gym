@@ -42,17 +42,6 @@ st.info(f"Gambar ini dapat menyimpan hingga {max_capacity} karakter teks.")
 
 image = image.convert("L")  # Ubah gambar ke format grayscale
 
-try:
-    # Hitung kapasitas gambar
-    max_capacity = len(np.array(image).flatten()) // 8
-    st.info(f"Gambar ini dapat menyimpan hingga {max_capacity} karakter teks.")
-
-    # Sisipkan teks
-    encoded_image = hide_text_in_image(image, secret_message)
-    st.success("Pesan berhasil disisipkan ke dalam gambar.")
-    st.image(encoded_image, caption="Gambar dengan pesan terenkripsi", use_column_width=True)
-except OverflowError as e:
-    st.error(f"Error: {e}")
 
 
 
