@@ -36,8 +36,7 @@ def hide_text_in_image(image, text):
     # Rekonstruksi gambar dari array yang telah dimodifikasi
     reshaped_img = flat_img.reshape(img_array.shape)
     return Image.fromarray(reshaped_img.astype('uint8'))
-max_capacity = len(np.array(image).flatten()) // 8  # Kapasitas maksimal dalam karakter
-st.info(f"Gambar ini dapat menyimpan hingga {max_capacity} karakter teks.")
+
 
 
     # Proses penyisipan data
