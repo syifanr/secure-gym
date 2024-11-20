@@ -312,23 +312,19 @@ def update_completed_bookings_table():
     conn = sqlite3.connect("users.db")
     c = conn.cursor()
 
-    # Periksa apakah kolom 'full_name' ada di tabel 'completed_bookings'
+    # Periksa apakah kolom ada di tabel
     c.execute("PRAGMA table_info(completed_bookings)")
     columns = [column[1] for column in c.fetchall()]
     
-    # Tambahkan kolom 'full_name' jika belum ada
+    # Tambahkan kolom hanya jika belum ada
     if "full_name" not in columns:
         c.execute("ALTER TABLE completed_bookings ADD COLUMN full_name TEXT")
-
-    # Tambahkan kolom 'membership_type' jika belum ada
     if "membership_type" not in columns:
         c.execute("ALTER TABLE completed_bookings ADD COLUMN membership_type TEXT")
 
     conn.commit()
     conn.close()
 
-# Jalankan fungsi update
-update_completed_bookings_table()
 
 def reset_completed_bookings():
     """
